@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
 import seaborn as sns
 class LinearRegression():
-    def __init__(self,model_name,lr=0.001,n_iters=1000):
+    def __init__(self,model_name,lr=0.01,n_iters=1000):
         self.model_name = model_name
         self.lr = lr
         self.n_iters = n_iters
@@ -18,10 +18,12 @@ class LinearRegression():
 
         for i in range(self.n_iters):   #gradient descent
             f_x = np.dot(X,self.weights) + self.bias
-            dw = np.dot(X.T,(y-f_x))/samples
-            db = np.sum((y-f_x))/samples
-            self.weights -= self.lr*dw
-            self.bias -= self.lr*db
+            dw = (np.dot(X.T,(y-f_x))/samples)
+            db = (np.sum((y-f_x))/samples)
+            w_in = self.lr*dw
+            b_in = self.lr*db
+            self.weights += w_in
+            self.bias += b_in
     def predict(self,X):
         f_x = np.dot(X,self.weights) + self.bias
         return f_x
@@ -37,11 +39,12 @@ def get_mse(y,prediction):
     return np.mean((y-prediction)**2)
 my_mse = get_mse(y_test,prediction)
 print(my_mse)
-pred_line = my_model.predict(X)
+line_pred = my_model.predict(X)
+plt.plot(X,line_pred)
 cmap = plt.get_cmap('viridis')
 fig = plt.figure(figsize=(6,8))
-m1 = plt.scatter(X_train,y_train,color = cmap(0.9))
-m2 = plt.scatter(X_test,y_test,color = cmap(0.5))        
+plt.scatter(X_train,y_train,color = cmap(0.9))
+plt.scatter(X_test,y_test,color = cmap(0.5))        
 #plt.plot(X,pred_line,color = 'black',label= "prediction")   
 
         
